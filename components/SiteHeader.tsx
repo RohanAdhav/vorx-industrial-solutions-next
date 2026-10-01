@@ -20,6 +20,7 @@ export default function SiteHeader() {
     };
 
     document.addEventListener("keydown", onKey);
+
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
@@ -44,7 +45,18 @@ export default function SiteHeader() {
 
     sections.forEach((section) => observer.observe(section));
 
-    return () => observer.disconnect();
+    const handleScroll = () => {
+      if (window.scrollY < 200) {
+        setActiveSection("");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -72,7 +84,9 @@ export default function SiteHeader() {
             className={`site-nav${open ? " open" : ""}`}
             aria-label="Main"
             onClick={(e) => {
-              if ((e.target as HTMLElement).closest("a")) setOpen(false);
+              if ((e.target as HTMLElement).closest("a")) {
+                setOpen(false);
+              }
             }}
           >
             <div className="nav-links">
