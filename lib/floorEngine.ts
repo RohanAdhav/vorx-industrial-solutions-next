@@ -76,7 +76,11 @@ export class FloorEngine {
     this.draw();
   }
 
-  setCoverage(pct: number) { this.coverage = pct / 100; this.dirty = true; this.schedule(); }
+  setCoverage(pct: number) {
+    this.coverage = pct / 100;
+    this.dirty = true;
+    this.schedule();
+  }
 
   refit() { this.scaled = null; this.schedule(); }
 
@@ -156,21 +160,26 @@ export class FloorEngine {
 
   private paintArea(out: Uint8ClampedArray, a: Area) {
     const w = this.work.width, [cr, cg, cb] = a.rgb;
-    for (let y = a.y0; y <= a.y1; y++) for (let x = a.x0; x <= a.x1; x++) {
-      const i = y * w + x, m = a.mask[i];
-      if (!m) continue;
-      const p = i * 4, r = out[p], g = out[p + 1], b = out[p + 2];
-      // Keep the photo's own light and shadow: scale the colour by brightness relative to the area's average.
-      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-      const f = Math.max(0.3, Math.min(2, lum / a.mean));
-      const s = Math.min(f, 1.3), hi = f > 1.3 ? (f - 1.3) * 110 : 0;
-      const k = (m / 255) * this.coverage;
-      out[p] = r + (Math.min(255, cr * s + hi) - r) * k;
-      out[p + 1] = g + (Math.min(255, cg * s + hi) - g) * k;
-      out[p + 2] = b + (Math.min(255, cb * s + hi) - b) * k;
+
+    for (let y = a.y0; y <= a.y1; y++) {
+      for (let x = a.x0; x <= a.x1; x++) {
+        const i = y * w + x, m = a.mask[i];
+
+        if (!m) continue;
+
+        const p = i * 4;
+        const r = out[p];
+        const g = out[p + 1];
+        const b = out[p + 2];
+
+        const k = (m / 255) * this.coverage;
+
+        out[p] = r + (cr - r) * k;
+        out[p + 1] = g + (cg - g) * k;
+        out[p + 2] = b + (cb - b) * k;
+      }
     }
   }
-
   /** Resample `work` to exactly tw x th using repeated halving + high-quality smoothing (avoids aliasing). */
   private downscale(tw: number, th: number) {
     let src: HTMLCanvasElement = this.work;
