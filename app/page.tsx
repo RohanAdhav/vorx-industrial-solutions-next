@@ -47,7 +47,12 @@ export default function Home() {
             <p className="eyebrow reveal">Industrial flooring &middot; protective systems</p>
             <h1 id="hero-title" className="reveal" style={{ "--d": ".08s" } as React.CSSProperties}>Build the floor your operation <em>depends on.</em></h1>
             <p className="hero-text reveal" style={{ "--d": ".16s" } as React.CSSProperties}>Vorx Industrial Solutions designs and delivers high-performance flooring and protective systems for facilities where hygiene, durability, safety and uptime matter.</p>
-            <a className="btn btn-primary reveal" style={{ "--d": ".24s" } as React.CSSProperties} href="#solutions">Explore our solutions &#8595;</a>
+            <a className="btn btn-primary reveal" style={{ "--d": ".24s" } as React.CSSProperties} href="#solutions">
+              Explore our solutions
+              <svg className="down-arrow" viewBox="0 0 12 16" aria-hidden="true">
+                <path d="M6 1V13M2 9L6 13L10 9" />
+              </svg>
+            </a>
             <ul className="hero-facts reveal" style={{ "--d": ".32s" } as React.CSSProperties}>
               <li><strong>Epoxy &amp; PU</strong><span>Seamless industrial floors</span></li>
               <li><strong>ESD Systems</strong><span>Static-control environments</span></li>
